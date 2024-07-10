@@ -5,7 +5,7 @@ import { verify } from "hono/jwt";
 import {
   createBlogInput,
   updateBlogInput,
-} from "@dhruvkumar1805/medium-common";
+} from "@dhruvkumar1805/medium-common-module";
 
 export const blogRouter = new Hono<{
   Bindings: {
@@ -99,7 +99,18 @@ blogRouter.get("/bulk", async (c) => {
     datasourceUrl: c.env.DATABASE_URL,
   }).$extends(withAccelerate());
 
-  const blogs = await prisma.blog.findMany();
+  const blogs = await prisma.blog.findMany({
+    select: {
+      content: true,
+      title: true,
+      id: true,
+      author: {
+        select: {
+          name: true,
+        },
+      },
+    },
+  });
 
   return c.json({
     blogs,
@@ -117,9 +128,19 @@ blogRouter.get("/:id", async (c) => {
       where: {
         id: Number(id),
       },
+      select: {
+        id: true,
+        title: true,
+        content: true,
+        author: {
+          select: {
+            name: true,
+          },
+        },
+      },
     });
     return c.json({
-      id: blog,
+      blog,
     });
   } catch (error) {
     c.status(411);

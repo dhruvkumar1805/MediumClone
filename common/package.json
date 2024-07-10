@@ -1,5 +1,5 @@
 {
-  "name": "@dhruvkumar1805/medium-common",
+  "name": "@dhruvkumar1805/medium-common-module",
   "version": "1.0.0",
   "main": "dist/index.js",
   "scripts": {
