@@ -3,16 +3,19 @@ import { Link, useNavigate } from "react-router-dom";
 import { SignupInput } from "@dhruvkumar1805/medium-common-module";
 import axios from "axios";
 import { BACKEND_URL } from "../config";
+import { Loader } from "./Spinner";
 
 export const Auth = ({ type }: { type: "signup" | "signin" }) => {
   const navigate = useNavigate();
-  const [postInputs, setPostsInputs] = useState<SignupInput>({
+  const [postInputs, setPostInputs] = useState<SignupInput>({
     name: "",
     username: "",
     password: "",
   });
+  const [loading, setLoading] = useState(false);
 
   async function sendRequest() {
+    setLoading(true);
     try {
       const response = await axios.post(
         `${BACKEND_URL}/api/v1/user/${type === "signup" ? "signup" : "signin"}`,
@@ -23,6 +26,8 @@ export const Auth = ({ type }: { type: "signup" | "signin" }) => {
       navigate("/blogs");
     } catch (error) {
       alert("Error while signing up");
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -32,11 +37,13 @@ export const Auth = ({ type }: { type: "signup" | "signin" }) => {
         <div>
           <div className="px-10">
             <div className="text-3xl text-center font-bold">
-              Create an account
+              {type === "signin"
+                ? "Log in to your account"
+                : "Create an account"}
             </div>
             <div className="text-center text-slate-500">
               {type === "signin"
-                ? "Don't have an account"
+                ? "Don't have an account?"
                 : "Already have an account?"}
               <Link
                 className="pl-2 underline"
@@ -53,7 +60,7 @@ export const Auth = ({ type }: { type: "signup" | "signin" }) => {
                 type={"name"}
                 placeholder="Enter your full name"
                 onChange={(e) => {
-                  setPostsInputs({
+                  setPostInputs({
                     ...postInputs,
                     name: e.target.value,
                   });
@@ -65,7 +72,7 @@ export const Auth = ({ type }: { type: "signup" | "signin" }) => {
               type={"username"}
               placeholder="Enter your Email"
               onChange={(e) => {
-                setPostsInputs({
+                setPostInputs({
                   ...postInputs,
                   username: e.target.value,
                 });
@@ -76,7 +83,7 @@ export const Auth = ({ type }: { type: "signup" | "signin" }) => {
               type={"password"}
               placeholder="Enter your password"
               onChange={(e) => {
-                setPostsInputs({
+                setPostInputs({
                   ...postInputs,
                   password: e.target.value,
                 });
@@ -84,10 +91,13 @@ export const Auth = ({ type }: { type: "signup" | "signin" }) => {
             />
             <button
               onClick={sendRequest}
+              disabled={loading}
               type="button"
-              className="mt-8 w-full text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700"
+              className={`mt-8 w-full text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700 ${
+                loading ? "opacity-50 cursor-not-allowed" : ""
+              }`}
             >
-              {type === "signup" ? "Sign up" : "Sign in"}
+              {loading ? <Loader /> : type === "signup" ? "Sign up" : "Sign in"}
             </button>
           </div>
         </div>

@@ -15,6 +15,9 @@ export const BlogCard = ({
   content,
   publishedDate,
 }: BlogCardProps) => {
+  const wordCount = content.split(" ").length;
+  const readingTime = Math.ceil(wordCount / 200);
+
   return (
     <Link to={`/blog/${id}`}>
       <div className="p-4 border-b border-slate-200 pb-4 w-screen max-w-screen-md cursor-pointer">
@@ -30,13 +33,11 @@ export const BlogCard = ({
             {publishedDate}
           </div>
         </div>
-        <div className="text-xl font-semibold">{title}</div>
+        <div className="text-2xl font-bold leading-7 pb-1">{title}</div>
         <div className="text-base font-extralight">
           {content.slice(0, 100) + "..."}
         </div>
-        <div className="text-slate-400 text-sm font-extralight pt-4">{`${Math.ceil(
-          content.length / 100
-        )} minute(s)`}</div>
+        <div className="text-slate-400 text-sm font-light pt-4">{`${readingTime} min read`}</div>
       </div>
     </Link>
   );
