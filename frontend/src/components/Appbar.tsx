@@ -1,8 +1,29 @@
 import { Link, useNavigate } from "react-router-dom";
 import { Avatar } from "./BlogCard";
+import { BACKEND_URL } from "../config";
+import axios from "axios";
+import { useEffect, useState } from "react";
 
 export const Appbar = () => {
   const navigate = useNavigate();
+  const [userName, setUserName] = useState("");
+
+  useEffect(() => {
+    const fetchUserName = async () => {
+      try {
+        const response = await axios.get(`${BACKEND_URL}/api/v1/user/me`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        });
+        setUserName(response.data.name);
+      } catch (error) {
+        console.error("Error fetching user name:", error);
+      }
+    };
+
+    fetchUserName();
+  }, []);
 
   async function handleLogout() {
     await localStorage.removeItem("token");
@@ -25,7 +46,7 @@ export const Appbar = () => {
             Write
           </button>
         </Link>
-        <Avatar name="Anonymous" size={"big"} />
+        <Avatar name={userName} size={"big"} />
         <button
           className="hover:bg-gray-300 transition-all duration-200 p-1.5 rounded-full"
           onClick={handleLogout}

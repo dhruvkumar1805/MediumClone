@@ -1,7 +1,7 @@
 import { Hono } from "hono";
 import { PrismaClient } from "@prisma/client/edge";
 import { withAccelerate } from "@prisma/extension-accelerate";
-import { sign } from "hono/jwt";
+import { sign, verify } from "hono/jwt";
 import { signupinput, signininput } from "@dhruvkumar1805/medium-common-module";
 
 export const userRouter = new Hono<{
@@ -85,5 +85,40 @@ userRouter.post("/signin", async (c) => {
     console.log(error);
     c.status(411);
     return c.text("Some error occured!");
+  }
+});
+
+userRouter.get("/me", async (c) => {
+  const authHeader = c.req.header("Authorization");
+
+  if (!authHeader) {
+    c.status(401);
+    return c.text("Authorization header is missing");
+  }
+
+  const token = authHeader;
+
+  try {
+    const decoded = (await verify(token, c.env.JWT_SECRET)) as { id: number };
+    const userId = decoded.id;
+
+    const prisma = new PrismaClient({
+      datasourceUrl: c.env.DATABASE_URL,
+    }).$extends(withAccelerate());
+
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+    });
+
+    if (!user) {
+      c.status(404);
+      return c.text("User not found");
+    }
+
+    return c.json({ name: user.name });
+  } catch (error) {
+    console.log(error);
+    c.status(401);
+    return c.text("Invalid token");
   }
 });
