@@ -17,6 +17,8 @@ export const BlogCard = ({
 }: BlogCardProps) => {
   const wordCount = content.split(" ").length;
   const readingTime = Math.ceil(wordCount / 200);
+  const truncatedContent =
+    content.length > 100 ? content.slice(0, 100) + "..." : content;
 
   return (
     <Link to={`/blog/${id}`}>
@@ -35,7 +37,7 @@ export const BlogCard = ({
         </div>
         <div className="text-2xl font-bold leading-7 pb-1">{title}</div>
         <div className="text-base font-extralight">
-          {content.slice(0, 100) + "..."}
+          <div dangerouslySetInnerHTML={{ __html: truncatedContent }} />
         </div>
         <div className="text-slate-400 text-sm font-light pt-4">{`${readingTime} min read`}</div>
       </div>

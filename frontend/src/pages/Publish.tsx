@@ -2,8 +2,10 @@ import { Appbar } from "../components/Appbar";
 import axios from "axios";
 import { BACKEND_URL } from "../config";
 import { useNavigate } from "react-router-dom";
-import { ChangeEvent, useState } from "react";
+import { useState } from "react";
 import { Loader } from "../components/Spinner";
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
 
 export const Publish = () => {
   const [title, setTitle] = useState("");
@@ -46,13 +48,18 @@ export const Publish = () => {
             placeholder="Title"
           />
 
-          <TextEditor onChange={(e) => setDescription(e.target.value)} />
+          <ReactQuill
+            value={description}
+            onChange={(content) => setDescription(content)}
+            className="mt-4 bg-white h-[300px]"
+            placeholder="Write an article..."
+          />
 
           <button
             onClick={handlePublish}
             type="submit"
             disabled={loading}
-            className={`mt-4 inline-flex items-center px-5 py-2.5 text-sm font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-blue-800 transition-all duration-200 ${
+            className={`mt-20 md:mt-16 inline-flex items-center px-5 py-2.5 text-sm font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-blue-800 transition-all duration-200 ${
               loading ? "opacity-50 cursor-not-allowed" : ""
             }`}
           >
@@ -63,29 +70,3 @@ export const Publish = () => {
     </div>
   );
 };
-
-function TextEditor({
-  onChange,
-}: {
-  onChange: (e: ChangeEvent<HTMLTextAreaElement>) => void;
-}) {
-  return (
-    <div className="mt-2">
-      <div className="w-full mb-4">
-        <div className="flex items-center justify-between border">
-          <div className="my-2 bg-white rounded-b-lg w-full">
-            <label className="sr-only">Publish post</label>
-            <textarea
-              onChange={onChange}
-              id="editor"
-              rows={8}
-              className="focus:outline-none block w-full px-0 text-sm text-gray-800 bg-white border-0 pl-2"
-              placeholder="Write an article..."
-              required
-            />
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
