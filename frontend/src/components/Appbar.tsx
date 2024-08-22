@@ -13,7 +13,7 @@ export const Appbar = () => {
       try {
         const response = await axios.get(`${BACKEND_URL}/api/v1/user/me`, {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
+            Authorization: `${localStorage.getItem("token")}`,
           },
         });
         setUserName(response.data.name);

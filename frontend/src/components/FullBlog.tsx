@@ -6,6 +6,12 @@ export const FullBlog = ({ blog }: { blog: Blog }) => {
   const wordCount = blog.content.split(" ").length;
   const readingTime = Math.ceil(wordCount / 200);
 
+  const formattedDate = new Date(blog.createdAt).toLocaleDateString("en-GB", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  });
+
   return (
     <div>
       <Appbar />
@@ -15,9 +21,7 @@ export const FullBlog = ({ blog }: { blog: Blog }) => {
             <div className="text-3xl md:text-5xl font-extrabold">
               {blog.title}
             </div>
-            <div className="text-slate-500 pt-4">
-              Posted on 2nd December 2023
-            </div>
+            <div className="text-slate-500 pt-4">Posted on {formattedDate}</div>
             <div className="text-slate-500">{`${readingTime} min read`}</div>
             <div className="md:col-span-4 mt-4 md:mt-0 md:hidden">
               <div className="text-slate-500 text-lg hidden md:block">
@@ -38,9 +42,7 @@ export const FullBlog = ({ blog }: { blog: Blog }) => {
               </div>
             </div>
             <div className="pt-10">
-              <div
-                dangerouslySetInnerHTML={{ __html: blog.content }}
-              />
+              <div dangerouslySetInnerHTML={{ __html: blog.content }} />
             </div>
           </div>
           <div className="md:col-span-4 mt-8 md:mt-0 hidden md:block">
