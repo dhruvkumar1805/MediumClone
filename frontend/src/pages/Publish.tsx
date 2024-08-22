@@ -1,4 +1,3 @@
-import { Appbar } from "../components/Appbar";
 import axios from "axios";
 import { BACKEND_URL } from "../config";
 import { useNavigate } from "react-router-dom";
@@ -38,8 +37,7 @@ export const Publish = () => {
 
   return (
     <div>
-      <Appbar />
-      <div className="flex justify-center w-full pt-8">
+      <div className="flex justify-center h-screen w-full pt-20">
         <div className="w-full px-8 md:max-w-screen-lg md:w-full">
           <input
             onChange={(e) => setTitle(e.target.value)}
@@ -59,11 +57,12 @@ export const Publish = () => {
             onClick={handlePublish}
             type="submit"
             disabled={loading}
-            className={`mt-20 md:mt-16 inline-flex items-center px-5 py-2.5 text-sm font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-blue-800 transition-all duration-200 ${
+            className={`mt-20 md:mt-16 inline-flex items-center justify-center px-5 py-2.5 text-sm font-medium text-center text-white bg-green-700 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-green-800 hover:bg-green-800 transition-all duration-200 ${
               loading ? "opacity-50 cursor-not-allowed" : ""
             }`}
+            style={{ minWidth: "100px" }}
           >
-            {loading ? <Loader /> : "Publish post"}
+            {loading ? <Loader /> : "Publish"}
           </button>
         </div>
       </div>

@@ -23,7 +23,7 @@ export const BlogCard = ({
   return (
     <Link to={`/blog/${id}`}>
       <div className="p-4 border-b border-slate-200 pb-4 w-screen max-w-screen-md cursor-pointer">
-        <div className="flex items-center py-2">
+        <div className="flex items-center py-4">
           <div className="flex justify-center flex-col">
             <Avatar name={authorName} size="small" />
           </div>
@@ -35,8 +35,8 @@ export const BlogCard = ({
             {publishedDate}
           </div>
         </div>
-        <div className="text-2xl font-bold leading-7 pb-1">{title}</div>
-        <div className="text-base font-extralight">
+        <div className="text-2xl font-black leading-7 pb-2">{title}</div>
+        <div className="text-base text-neutral-500">
           <div dangerouslySetInnerHTML={{ __html: truncatedContent }} />
         </div>
         <div className="text-slate-400 text-sm font-light pt-4">{`${readingTime} min read`}</div>

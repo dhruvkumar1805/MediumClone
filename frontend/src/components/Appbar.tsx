@@ -31,9 +31,9 @@ export const Appbar = () => {
   }
 
   return (
-    <div className="border-b flex justify-between px-6 py-4 shadow-sm">
+    <div className="border-b flex justify-between px-4 py-4">
       <div className="flex flex-col justify-center cursor-pointer">
-        <Link to={"/blogs"} className="font-medium text-xl pl-1.5">
+        <Link to={"/blogs"} className="font-semibold text-2xl pl-1.5">
           Medium
         </Link>
       </div>
@@ -61,7 +61,7 @@ export const Appbar = () => {
             <path
               d="M304 336v40a40 40 0 01-40 40H104a40 40 0 01-40-40V136a40 40 0 0140-40h152c22.09 0 48 17.91 48 40v40M368 336l80-80-80-80M176 256h256"
               fill="none"
-              stroke="currentColor"
+              stroke="#6B6B6B"
               stroke-linecap="round"
               stroke-linejoin="round"
               stroke-width="32"
