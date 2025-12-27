@@ -1,66 +1,75 @@
-import axios from "axios";
-import { BACKEND_URL } from "../config";
-import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-import { Loader } from "../components/Spinner";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 
-export const Publish = () => {
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
+import { BACKEND_URL } from "../config";
+import { Loader } from "../components/Spinner";
 
-  async function handlePublish() {
+export const Publish = () => {
+  const navigate = useNavigate();
+  const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  const canPublish = title.trim() && content.trim();
+
+  const handlePublish = async () => {
+    if (!canPublish || loading) return;
+
     setLoading(true);
+    setError("");
+
     try {
-      const response = await axios.post(
+      const token = localStorage.getItem("token");
+      if (!token) return navigate("/signin");
+
+      const { data } = await axios.post(
         `${BACKEND_URL}/api/v1/blog`,
+        { title, content },
         {
-          title,
-          content: description,
-        },
-        {
-          headers: {
-            Authorization: localStorage.getItem("token"),
-          },
+          headers: { Authorization: `Bearer ${token}` },
         }
       );
-      navigate(`/blog/${response.data.id}`);
-    } catch (error) {
-      console.error("Error publishing post:", error);
+
+      navigate(`/blog/${data.id}`);
+    } catch {
+      setError("Failed to publish article. Try again.");
     } finally {
       setLoading(false);
     }
-  }
+  };
 
   return (
-    <div>
-      <div className="flex justify-center h-screen w-full pt-20">
-        <div className="w-full px-8 md:max-w-screen-lg md:w-full">
-          <input
-            onChange={(e) => setTitle(e.target.value)}
-            type="text"
-            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-            placeholder="Title"
-          />
+    <div className="min-h-screen bg-white flex justify-center px-4 pt-16">
+      <div className="w-full max-w-4xl">
+        <input
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          placeholder="Title"
+          className="w-full text-4xl font-extrabold tracking-tight placeholder:text-slate-400 focus:outline-none mb-6"
+        />
 
+        <div className="border rounded-xl overflow-hidden">
           <ReactQuill
-            value={description}
-            onChange={(content) => setDescription(content)}
-            className="mt-4 bg-white h-[300px]"
-            placeholder="Write an article..."
+            value={content}
+            onChange={setContent}
+            placeholder="Tell your story…"
+            className="bg-white h-[320px]"
           />
+        </div>
 
+        {error && (
+          <p className="text-sm text-red-600 mt-4 text-center">{error}</p>
+        )}
+
+        <div className="flex justify-end mt-8">
           <button
             onClick={handlePublish}
-            type="submit"
-            disabled={loading}
-            className={`mt-20 md:mt-16 inline-flex items-center justify-center px-5 py-2.5 text-sm font-medium text-center text-white bg-green-700 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-green-800 hover:bg-green-800 transition-all duration-200 ${
-              loading ? "opacity-50 cursor-not-allowed" : ""
-            }`}
-            style={{ minWidth: "100px" }}
+            disabled={!canPublish || loading}
+            className="inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-full text-sm font-medium text-white bg-green-700 hover:bg-green-800 transition disabled:opacity-50 disabled:cursor-not-allowed min-w-[120px]"
           >
             {loading ? <Loader /> : "Publish"}
           </button>
