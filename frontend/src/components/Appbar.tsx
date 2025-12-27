@@ -34,7 +34,7 @@ export const Appbar = () => {
     <div className="border-b flex justify-between px-4 py-4">
       <div className="flex flex-col justify-center cursor-pointer">
         <Link to={"/blogs"} className="font-semibold text-2xl pl-1.5">
-          Medium
+          OpenDraft
         </Link>
       </div>
       <div className="flex justify-center items-center gap-4">
