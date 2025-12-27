@@ -1,11 +1,11 @@
 import { Link } from "react-router-dom";
 
 interface BlogCardProps {
+  id: number;
   authorName: string;
   title: string;
   content: string;
   publishedDate: string;
-  id: number;
 }
 
 export const BlogCard = ({
@@ -15,60 +15,65 @@ export const BlogCard = ({
   content,
   publishedDate,
 }: BlogCardProps) => {
-  const wordCount = content.split(" ").length;
-  const readingTime = Math.ceil(wordCount / 200);
-  const truncatedContent =
-    content.length > 100 ? content.slice(0, 100) + "..." : content;
+  const words = content.trim().split(/\s+/).length;
+  const readingTime = Math.max(1, Math.ceil(words / 200));
+
+  const preview =
+    content.length > 160 ? content.slice(0, 160).trim() + "…" : content;
 
   return (
-    <Link to={`/blog/${id}`}>
-      <div className="p-4 border-b border-slate-200 pb-4 w-screen max-w-screen-md cursor-pointer">
-        <div className="flex items-center py-4">
-          <div className="flex justify-center flex-col">
-            <Avatar name={authorName} size="small" />
-          </div>
-          <div className="font-light pl-2 text-sm">{authorName}</div>
-          <div className="pl-2">
-            <Circle />
-          </div>
-          <div className="pl-2 font-light text-slate-500 text-sm">
-            {publishedDate}
-          </div>
-        </div>
-        <div className="text-2xl font-black leading-7 pb-2">{title}</div>
-        <div className="text-base text-neutral-500">
-          <div dangerouslySetInnerHTML={{ __html: truncatedContent }} />
-        </div>
-        <div className="text-slate-400 text-sm font-light pt-4">{`${readingTime} min read`}</div>
+    <Link
+      to={`/blog/${id}`}
+      className="relative block max-w-3xl mx-auto px-6 py-7 rounded-xl transition
+             hover:bg-slate-50 active:bg-slate-100
+             after:absolute after:left-6 after:right-6 after:bottom-0
+             after:h-px after:bg-slate-200/60 last:after:hidden"
+    >
+      <div className="flex items-center gap-3 text-sm text-slate-500 mb-4">
+        <Avatar name={authorName} size="small" />
+        <span className="font-medium text-slate-700">
+          {authorName || "Anonymous"}
+        </span>
+        <Circle />
+        <span>{publishedDate}</span>
+      </div>
+
+      <h2 className="text-xl md:text-2xl font-extrabold tracking-tight leading-snug text-slate-900 mb-3">
+        {title}
+      </h2>
+
+      <p className="text-slate-600 text-base leading-relaxed line-clamp-3">
+        {stripHtml(preview)}
+      </p>
+
+      <div className="mt-5 flex items-center gap-2 text-sm text-slate-400">
+        <span>{readingTime} min read</span>
       </div>
     </Link>
   );
 };
 
-export function Circle() {
-  return <div className="h-1 w-1 rounded-full bg-slate-600"></div>;
-}
+const stripHtml = (html: string) => html.replace(/<[^>]+>/g, "");
 
-export function Avatar({
+export const Circle = () => (
+  <span className="inline-block h-1 w-1 rounded-full bg-slate-400" />
+);
+
+export const Avatar = ({
   name,
   size = "small",
 }: {
   name: string;
-  size: "small" | "big";
-}) {
+  size?: "small" | "big";
+}) => {
+  const initial = name?.trim()?.[0]?.toUpperCase() ?? "U";
+
   return (
     <div
-      className={`relative inline-flex items-center justify-center ${
-        size === "small" ? "w-6 h-6" : "w-8 h-8"
-      } overflow-hidden bg-gray-600 rounded-full`}
+      className={`flex items-center justify-center rounded-full bg-slate-700 text-white font-medium
+        ${size === "small" ? "w-7 h-7 text-xs" : "w-10 h-10 text-sm"}`}
     >
-      <span
-        className={`${
-          size === "small" ? "text-xs" : "text-base"
-        } font-extralight text-gray-200`}
-      >
-        {name[0]}
-      </span>
+      {initial}
     </div>
   );
-}
+};
