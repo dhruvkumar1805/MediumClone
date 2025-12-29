@@ -29,9 +29,7 @@ export const Publish = () => {
       const { data } = await axios.post(
         `${BACKEND_URL}/api/v1/blog`,
         { title, content },
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
+        { headers: { Authorization: `Bearer ${token}` } }
       );
 
       navigate(`/blog/${data.id}`);
@@ -43,36 +41,45 @@ export const Publish = () => {
   };
 
   return (
-    <div className="min-h-screen bg-white flex justify-center px-4 pt-16">
-      <div className="w-full max-w-4xl">
-        <input
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          placeholder="Title"
-          className="w-full text-4xl font-extrabold tracking-tight placeholder:text-slate-400 focus:outline-none mb-6"
-        />
-
-        <div className="border rounded-xl overflow-hidden">
-          <ReactQuill
-            value={content}
-            onChange={setContent}
-            placeholder="Tell your story…"
-            className="bg-white h-[320px]"
+    <div className="min-h-screen bg-slate-50 flex justify-center px-4 pt-16">
+      <div className="w-full max-w-3xl">
+        <div className="bg-white rounded-2xl shadow-sm border border-slate-200 px-8 py-10">
+          <input
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            placeholder="Title"
+            className="w-full text-[2.6rem] font-extrabold leading-tight tracking-tight
+                       placeholder:text-slate-300 focus:outline-none mb-8"
           />
+
+          <div className="border border-slate-200 rounded-xl overflow-hidden bg-white">
+            <ReactQuill
+              value={content}
+              onChange={setContent}
+              placeholder="Tell your story…"
+              className="h-[360px]"
+            />
+          </div>
+
+          {error && (
+            <p className="text-sm text-red-600 mt-6 text-center">{error}</p>
+          )}
         </div>
 
-        {error && (
-          <p className="text-sm text-red-600 mt-4 text-center">{error}</p>
-        )}
-
-        <div className="flex justify-end mt-8">
-          <button
-            onClick={handlePublish}
-            disabled={!canPublish || loading}
-            className="inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-full text-sm font-medium text-white bg-green-700 hover:bg-green-800 transition disabled:opacity-50 disabled:cursor-not-allowed min-w-[120px]"
-          >
-            {loading ? <Loader /> : "Publish"}
-          </button>
+        <div className="sticky bottom-6 mt-10 flex justify-end">
+          <div className="bg-white border border-slate-200 shadow-md rounded-full px-2 py-2">
+            <button
+              onClick={handlePublish}
+              disabled={!canPublish || loading}
+              className="inline-flex items-center justify-center gap-2
+                         px-6 py-2.5 rounded-full text-sm font-medium
+                         text-white bg-green-700 hover:bg-green-800
+                         transition disabled:opacity-50 disabled:cursor-not-allowed
+                         min-w-[130px]"
+            >
+              {loading ? <Loader /> : "Publish"}
+            </button>
+          </div>
         </div>
       </div>
     </div>
