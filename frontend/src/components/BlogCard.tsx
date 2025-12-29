@@ -19,26 +19,32 @@ export const BlogCard = ({
   const readingTime = Math.max(1, Math.ceil(words / 200));
 
   const preview =
-    content.length > 160 ? content.slice(0, 160).trim() + "…" : content;
+    content.length > 170 ? content.slice(0, 170).trim() + "…" : content;
 
   return (
     <Link
       to={`/blog/${id}`}
-      className="relative block max-w-3xl mx-auto px-6 py-7 rounded-xl transition
-             hover:bg-slate-50 active:bg-slate-100
-             after:absolute after:left-6 after:right-6 after:bottom-0
-             after:h-px after:bg-slate-200/60 last:after:hidden"
+      className="group relative block max-w-3xl mx-auto px-7 py-8 rounded-2xl
+                 transition-all duration-300
+                 hover:-translate-y-[2px] hover:bg-slate-50 hover:shadow-sm
+                 after:absolute after:left-8 after:right-8 after:bottom-0
+                 after:h-px after:bg-slate-200/60 last:after:hidden"
     >
-      <div className="flex items-center gap-3 text-sm text-slate-500 mb-4">
+      <div className="flex items-center gap-3 text-sm text-slate-500 mb-5">
         <Avatar name={authorName} size="small" />
         <span className="font-medium text-slate-700">
           {authorName || "Anonymous"}
         </span>
         <Circle />
-        <span>{publishedDate}</span>
+        <span className="text-slate-400">{publishedDate}</span>
       </div>
 
-      <h2 className="text-xl md:text-2xl font-extrabold tracking-tight leading-snug text-slate-900 mb-3">
+      <h2
+        className="text-[1.45rem] md:text-[1.65rem]
+                   font-extrabold tracking-tight leading-snug
+                   text-slate-900 mb-3
+                   group-hover:underline decoration-slate-300 underline-offset-4"
+      >
         {title}
       </h2>
 
@@ -46,7 +52,7 @@ export const BlogCard = ({
         {stripHtml(preview)}
       </p>
 
-      <div className="mt-5 flex items-center gap-2 text-sm text-slate-400">
+      <div className="mt-6 flex items-center gap-3 text-sm text-slate-400">
         <span>{readingTime} min read</span>
       </div>
     </Link>
@@ -70,7 +76,9 @@ export const Avatar = ({
 
   return (
     <div
-      className={`flex items-center justify-center rounded-full bg-slate-700 text-white font-medium
+      className={`flex items-center justify-center rounded-full
+        bg-gradient-to-br from-slate-700 to-slate-600
+        text-white font-medium
         ${size === "small" ? "w-7 h-7 text-xs" : "w-10 h-10 text-sm"}`}
     >
       {initial}
